@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:flutter_tts/flutter_tts.dart'; 
+import 'package:flutter_tts/flutter_tts.dart'; // Para texto a voz
 
 void main() {
   runApp(const MyApp());
@@ -74,12 +74,12 @@ class _SensorScreenState extends State<SensorScreen> {
     _updateDateTime();
   }
 
-  
+  // Función para iniciar la captura de datos de los sensores y etiquetas
   void _startSensors() {
- 
+    // Limpiar la lista de datos antes de iniciar
     _sensorData.clear();
 
-    
+    // Iniciar la suscripción al giroscopio
     _gyroscopeSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
       setState(() {
         _gyroscopeX = event.x;
@@ -99,16 +99,16 @@ class _SensorScreenState extends State<SensorScreen> {
 
     // Iniciar el temporizador para capturar a 100 Hz (cada 10 ms)
     _samplingTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      final currentTime = DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now());
+      final currentTime = DateFormat('HH-mm-ss.SSS').format(DateTime.now());
       _sensorData.add([
-        currentTime,
-        _etiquetaActual, // Registrar la etiqueta actual
-        _gyroscopeX,
-        _gyroscopeY,
-        _gyroscopeZ,
-        _accelerometerX,
-        _accelerometerY,
-        _accelerometerZ
+        currentTime,          // hr-min-seg
+        _accelerometerX,      // ax
+        _accelerometerY,      // ay
+        _accelerometerZ,      // az
+        _gyroscopeX,          // gx
+        _gyroscopeY,          // gy
+        _gyroscopeZ,          // gz
+        _etiquetaActual       // etiqueta
       ]);
     });
 
@@ -158,7 +158,7 @@ class _SensorScreenState extends State<SensorScreen> {
 
       // Convertir la lista de datos a formato CSV
       final csvData = const ListToCsvConverter().convert([
-        ['Tiempo', 'Etiqueta', 'GX', 'GY', 'GZ', 'AX', 'AY', 'AZ'],
+        ['hr-min-seg', 'ax', 'ay', 'az', 'gx', 'gy', 'gz', 'etiqueta'],
         ..._sensorData
       ]);
 
