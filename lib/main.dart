@@ -52,14 +52,14 @@ class _SensorScreenState extends State<SensorScreen> {
   // Temporizador para la tasa de muestreo de 100 Hz (cada 10 ms)
   Timer? _samplingTimer;
 
-  // Variables para etiquetas
+  // Nuevas etiquetas descriptivas
   List<String> _etiquetas = [
-    'etiqueta_1', 'etiqueta_2', 'etiqueta_3', 'etiqueta_4', 'etiqueta_5',
-    'etiqueta_6', 'etiqueta_7', 'etiqueta_8', 'etiqueta_9', 'etiqueta_10',
-    'etiqueta_fin'
+    'Salto zigzag', 'Parado', 'Saludar', 'Sprint', 'Patear pelota',
+    'Tocar puerta', 'Agacharse', 'Movimiento de círculo', 
+    'Movimiento de rebote', 'Movimiento de llave', 'Etiqueta fin'
   ];
   int _etiquetaIndex = 0;
-  String _etiquetaActual = 'etiqueta_1';
+  String _etiquetaActual = 'Salto zigzag';
   Timer? _etiquetaTimer;
 
   // Instancia de FlutterTTS
@@ -129,7 +129,7 @@ class _SensorScreenState extends State<SensorScreen> {
       // Anunciar la nueva etiqueta
       await _flutterTts.speak('Cambiando a $_etiquetaActual');
     } else {
-      // Si la etiqueta es 'etiqueta_fin', detener la captura
+      // Si la etiqueta es 'Etiqueta fin', detener la captura
       _stopSensors();
       await _flutterTts.speak('Etiqueta final alcanzada, fin del registro');
     }
