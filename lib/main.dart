@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:flutter_tts/flutter_tts.dart'; // Para texto a voz
+import 'package:flutter_tts/flutter_tts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,17 +42,17 @@ class _SensorScreenState extends State<SensorScreen> {
   // Variable para la fecha y hora
   String _formattedDateTime = '';
 
-  // Suscripciones a los sensores
+  // Metodo de los sensores
   StreamSubscription<GyroscopeEvent>? _gyroscopeSubscription;
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
   // Lista para almacenar los registros de los sensores
   List<List<dynamic>> _sensorData = [];
 
-  // Temporizador para la tasa de muestreo de 100 Hz (cada 10 ms)
+  // Temporizador el muestreo de 100 Hz 
   Timer? _samplingTimer;
 
-  // Nuevas etiquetas descriptivas
+  // Etiquetas
   List<String> _etiquetas = [
     'Salto zigzag', 'Parado', 'Saludar', 'Sprint', 'Patear pelota',
     'Tocar puerta', 'Agacharse', 'Movimiento de círculo', 
@@ -78,8 +78,13 @@ class _SensorScreenState extends State<SensorScreen> {
   void _startSensors() {
     // Limpiar la lista de datos antes de iniciar
     _sensorData.clear();
+    _etiquetaIndex = 0;
+    _etiquetaActual = _etiquetas[_etiquetaIndex];
 
-    // Iniciar la suscripción al giroscopio
+    // Anunciar la primera etiqueta
+    _flutterTts.speak('Iniciando con $_etiquetaActual');
+
+    // Iniciar el giroscopio
     _gyroscopeSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
       setState(() {
         _gyroscopeX = event.x;
@@ -88,7 +93,7 @@ class _SensorScreenState extends State<SensorScreen> {
       });
     });
 
-    // Iniciar la suscripción al acelerómetro
+    // Iniciar el acelerómetro
     _accelerometerSubscription = accelerometerEvents.listen((AccelerometerEvent event) {
       setState(() {
         _accelerometerX = event.x;
@@ -97,7 +102,7 @@ class _SensorScreenState extends State<SensorScreen> {
       });
     });
 
-    // Iniciar el temporizador para capturar a 100 Hz (cada 10 ms)
+    // Iniciar el temporizador 
     _samplingTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       final currentTime = DateFormat('HH-mm-ss.SSS').format(DateTime.now());
       _sensorData.add([
@@ -137,7 +142,7 @@ class _SensorScreenState extends State<SensorScreen> {
 
   // Función para detener la captura de datos de los sensores y etiquetas, y guardar en CSV
   Future<void> _stopSensors() async {
-    // Detener las suscripciones y los temporizadores
+    // Detener temporizadores
     _gyroscopeSubscription?.cancel();
     _accelerometerSubscription?.cancel();
     _samplingTimer?.cancel();
@@ -207,7 +212,7 @@ class _SensorScreenState extends State<SensorScreen> {
         children: [
           const SizedBox(height: 50),
 
-          // Nombre y título en la parte superior
+          // Titulos
           const Text(
             'Ángel Luna Lugo',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
